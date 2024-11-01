@@ -1,6 +1,6 @@
 const express = require('express'); 
 const cors = require('cors'); 
-const dotenv = require('dotenv'); 
+const dotenv = require('dotenv'); // Importamos dotenv para manejar variables de entorno
 const routes = require('./routes/routes'); 
 
 dotenv.config(); 
@@ -11,13 +11,7 @@ app.use(express.json());
 
 app.use('/', routes); // Usamos las rutas definidas en el archivo routes.js
 
-// Middleware de manejo de errores
-app.use((err, req, res, next) => {
-  console.error('Error:', err); // Imprimir el error en los logs
-  res.status(500).json({ error: 'Internal Server Error', details: err.message });
-});
-
-const PORT = process.env.PORT || 5000; 
+const PORT = process.env.PORT || 5000; // Establecemos el puerto desde .env o usa 5000 por defecto
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`); 
+  console.log(`Servidor corriendo en el puerto ${PORT}`); // Iniciamos el servidor y muestra el puerto en consola
 });
