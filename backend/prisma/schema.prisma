@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js" // Usamos Prisma para interactuar con la base de datos
+}
+
+datasource db {
+  provider = "mongodb" // El proveedor es MongoDB
+  url      = env("DATABASE_URL") // Aquí tenemos la URL de las variables de entorno
+}
+
+model User {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId // Definimos el ID con MongoDB
+  username String    @unique // Nombre de usuario, que es único
+  password String // Contraseña del usuario
+  email    String    @unique // El correo del usuario
+  isAdmin  Boolean   @default(false) // Indica si el usuario es administrador y por defecto es false
+  products Product[] // Relación uno a muchos con el modelo Product
+  merch     Merch[]   // Relación uno a muchos con el modelo Merch
+}
+
+
+model Product {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId // ID único para cada producto
+  name        String // Nombre del producto
+  description String // Descripción del producto
+  price       Float // Precio del producto
+  image       String // URL de la imagen del producto
+  userId      String? @map("userId") @db.ObjectId // ID del usuario asociado
+  user        User?   @relation(fields: [userId], references: [id]) // Relación opcional con el modelo User
+}
+
+model News {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId // ID único para cada noticia
+  title     String  // Título de la noticia
+  content   String  // Contenido de la noticia
+  image     String? // URL de la imagen de la noticia
+  createdAt DateTime @default(now()) // Fecha de creación de la noticia
+}
+model Merch {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId // ID único para cada artículo de merch
+  name        String   // Nombre del artículo de merch
+  description String   // Descripción del artículo de merch
+  price       Float    // Precio del artículo de merch
+  image       String   // URL de la imagen del artículo de merch
+  createdAt   DateTime @default(now()) // Fecha de creación del artículo de merch
+  userId      String?  @map("userId") @db.ObjectId // ID  del usuario que lo creó
+  user        User?    @relation(fields: [userId], references: [id])
+}
